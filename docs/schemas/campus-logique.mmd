@@ -1,0 +1,65 @@
+graph TD
+    %% Styling
+    classDef core fill:#bbdefb,stroke:#1565c0,stroke-width:2px;
+    classDef fw fill:#ffcdd2,stroke:#c62828,stroke-width:2px;
+    classDef access fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef ot fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
+    classDef link text-align:center;
+
+    %% --- Building A (IT Facility) ---
+    subgraph BldgA [Building A - Corporate HQ]
+        direction TB
+        CCA["<b>CC-A</b><br/>Houses Collapsed Core A<br/>Manages standard IT routing,<br/>internet edge, and central ERP infrastructure."]:::core
+       
+        subgraph AccessA [Access Layer]
+            direction LR
+            ACCA01["ACC-A-01"]:::access
+            ACCA02["ACC-A-02"]:::access
+            ACCA03["ACC-A-03"]:::access
+            ACCA04["ACC-A-04"]:::access
+            ACCA05["ACC-A-05"]:::access
+            ACCA06["ACC-A-06"]:::access
+        end
+       
+        FWA["FW-A<br/>(Firewall)"]:::fw
+       
+        %% Building A Internal Links
+        CCA --- ACCA01 & ACCA02 & ACCA03 & ACCA04 & ACCA05 & ACCA06
+        CCA --- FWA
+    end
+
+    %% --- Building B (Production Plant) ---
+    subgraph BldgB [Building B - Production Plant]
+        direction TB
+        CCB["<b>CC-B</b><br/>Houses Collapsed Core B<br/>Manages localized OT routing, automates,<br/>and supervision systems."]:::core
+       
+        subgraph AccessB [Access Layer]
+            direction LR
+            ACCB01["ACC-B-01"]:::access
+            ACCB02["ACC-B-02"]:::access
+            ACCB03["ACC-B-03"]:::access
+            ACCB04["ACC-B-04"]:::access
+        end
+       
+        subgraph LocalOT [OT Infrastructure]
+            PLC["PLCs / Automates"]:::ot
+            SUP["Supervision"]:::ot
+        end
+       
+        FWB["FW-B<br/>(Internal Firewall)"]:::fw
+       
+        %% Building B Internal Links
+        CCB --- ACCB01 & ACCB02 & ACCB03 & ACCB04
+        CCB --- FWB
+        FWB --- PLC & SUP
+    end
+
+    %% --- The Distributed Link ---
+    %% Adding the descriptive text from Page 13
+    CCA ===|"<b>The Distributed Link</b><br/>Two independent fiber-optic cables<br/>routed through entirely different trenches."| CCB
+   
+    %% Business Alignment Note (floating)
+    ALIGNMENT["<b>Business Alignment:</b><br/>If Building A is destroyed or isolated, Building B retains<br/>localized routing (CC-B), local policies, and OT services.<br/>Manufacturing continues uninterrupted.<br/>Non-critical services gracefully degraded."]:::link
+   
+    %% Invisible link to position the note
+    CCB ~~~ ALIGNMENT
